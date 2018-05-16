@@ -91,7 +91,7 @@ function addFramework(framework) {
         var filePath = file.history[0],
             indexTag = filePath.indexOf(pagesTag) + pagesTag.length,
             content = file.contents.toString('utf8'),
-            text = (content.indexOf(framework) > -1 ? '' : framework) + content;
+            text = content;
 
 
         file.contents = new Buffer(text);
@@ -156,7 +156,7 @@ function makeDiffZip({ jsVersion, platform }) {
             n.on('message', function(message) {
                 if (message.type === 'done') {
                     n.kill();
-                    shell.cp('dist/js/' + jsVersion + '.zip', targetPath);
+                    shell.cp('native_dist/' + jsVersion + '.zip', targetPath);
                     logger.success('publish success!');
                     logger.sep();
                     logger.log('app name: %s', appName);
@@ -177,14 +177,10 @@ function makeDiffZip({ jsVersion, platform }) {
 function writeJson({ jsVersion, platform }) {
     return new Promise((resolve, reject) => {
         var requestUrl = argv.s || argv.send,
-            file = path.resolve(process.cwd(), 'dist/version.json'),
-            jsPath = process.cwd() + '/dist/js/',
-            tmpJsPath = process.cwd() + '/dist/_js/';
+            file = path.resolve(process.cwd(), 'native_dist/version.json'),
+            jsPath = process.cwd() + '/native_dist/_pages/';
 
-        shell.mkdir('-p', tmpJsPath);
-        shell.cp('-r', process.cwd() + '/dist/js/**/*.zip', tmpJsPath);
         shell.rm('-rf', jsPath);
-        fs.rename(tmpJsPath, jsPath);
         if (requestUrl) {
             __request.post(requestUrl, {
                 form: versionInfo
@@ -211,7 +207,7 @@ function writeJson({ jsVersion, platform }) {
 
 function generateZip({ jsVersion, platform }) {
     return new Promise((resolve, reject) => {
-        zipFolder(path.resolve(process.cwd(), 'dist/js/_pages/'), path.resolve(process.cwd(), 'dist/js/' + jsVersion + '.zip'), (err) => {
+        zipFolder(path.resolve(process.cwd(), 'native_dist/_pages/'), path.resolve(process.cwd(), 'native_dist/' + jsVersion + '.zip'), (err) => {
             if (err) {
                 logger.fatal('generate eros json error: %s', err);
                 reject(e)
@@ -225,7 +221,7 @@ function generateZip({ jsVersion, platform }) {
 function minWeex(platform) {
     var timestamp = +new Date(),
         jsVersion = getMd5Version(),
-        md5File = path.resolve(process.cwd(), 'dist/js/_pages/md5.json');
+        md5File = path.resolve(process.cwd(), 'native_dist/_pages/md5.json');
 
     versionInfo['appName'] = appName;
     versionInfo['jsVersion'] = jsVersion;
@@ -259,8 +255,8 @@ function minWeex(platform) {
 function weexErosHandler({ jsVersion, platform }) {
     return new Promise((resolve) => {
         var params = {
-            jsZipPath: path.resolve(process.cwd(), './dist/js/' + jsVersion + '.zip'),
-            erosNative: require(path.resolve(process.cwd(), './config/eros.native.js')),
+            jsZipPath: path.resolve(process.cwd(), './native_dist/' + jsVersion + '.zip'),
+            erosNative: require(path.resolve(process.cwd(), './config/btr.native.js')),
             bundleConfig: _.assign({
                 filesMd5: versionMap
             }, versionInfo)
