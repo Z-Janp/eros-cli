@@ -14,13 +14,13 @@ var CONFIG = null;
 
 function readAllConfig() {
     var configPath = path.join(process.cwd(), './config.js'),
-        erosDevPath = path.join(process.cwd(), './config/eros.dev.js'),
-        erosConfigPath = path.resolve(process.cwd(), './config/eros.native.js');
-
+        // erosDevPath = path.join(process.cwd(), './config/eros.dev.js'),
+        erosConfigPath = path.resolve(process.cwd(), './config/btr.native.js');
     // 兼容weex-eros 
-    if (fs.existsSync(erosConfigPath) && fs.existsSync(erosDevPath)) {
-        var erosDev = require(erosDevPath),
-            erosConfig = require(erosConfigPath);
+    if (fs.existsSync(erosConfigPath)) {
+        // var erosDev = require(erosDevPath);
+        var erosDev = {};
+        var erosConfig = require(erosConfigPath);
 
         CONFIG = _.assign({
             weex: true,
@@ -42,7 +42,7 @@ function readAllConfig() {
 }
 
 function readNativeConfig() {
-    return require(path.resolve(process.cwd(), './config/eros.native.js'))
+    return require(path.resolve(process.cwd(), './config/btr.native.js'))
 }
 
 function get(key) {
