@@ -8,12 +8,12 @@ var fs = require('fs'),
 
 function _writeJsonToIos(name, data) {
     const iosZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').iOS);
-    // jsonfile.writeFileSync(path.resolve(iosZipTarget, 'eros.native.json'), data);
+    // jsonfile.writeFileSync(path.resolve(iosZipTarget, 'btr.native.json'), data);
     jsonfile.writeFileSync(path.resolve(iosZipTarget, name), data);
 }
 function _writeJsonToAndroid(name, data) {
     const androidZipTarget = path.resolve(process.cwd(), './platforms/' + readConfig.get('localZipFolder').android);
-    // jsonfile.writeFileSync(path.resolve(androidZipTarget, 'eros.native.json'), data);
+    // jsonfile.writeFileSync(path.resolve(androidZipTarget, 'btr.native.json'), data);
     jsonfile.writeFileSync(path.resolve(androidZipTarget, name), data);
 }
 
@@ -26,8 +26,8 @@ function iosHandler(params) {
     logger.log('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, iosZipTarget + '/bundle.zip');
 
-    // logger.log('write -----> eros.native.json');
-    // _writeJsonToIos('eros.native.json', params.erosNative);
+    // logger.log('write -----> btr.native.json');
+    // _writeJsonToIos('btr.native.json', params.erosNative);
 
     logger.log('write -----> bundle.config');
     _writeJsonToIos('bundle.config', params.bundleConfig);
@@ -64,7 +64,7 @@ GETTUI_APPSECRET=${erosNativeJs.getui.appSecret}
     logger.log('copy  -----> bundle.zip');
     shell.cp('-r' , params.jsZipPath, androidZipTarget + '/bundle.zip');
 
-    // _packJsonToAndroid('eros.native.json', params.erosNative);
+    // _packJsonToAndroid('btr.native.json', params.erosNative);
     // _writeJsonToAndroid(params.erosNative)
 
     logger.log('write -----> bundle.config');
