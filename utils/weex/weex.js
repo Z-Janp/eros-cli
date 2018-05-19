@@ -23,7 +23,7 @@ var readConfig = require('../readConfig'),
     shell = require('shelljs');
 
 var versionMap = [],
-    pagesTag = path.sep + 'dist' + path.sep + "js",
+    pagesTag = path.sep + 'native_dist' + path.sep + "js",
     iconfontTag = path.sep + 'iconfont' + path.sep,
     assetsTag = path.sep + 'assets' + path.sep,
     appName = readConfig.get('appName'),
@@ -144,15 +144,15 @@ function getMd5Version() {
 
 function makeDiffZip({ jsVersion, platform }) {
     return new Promise((resolve) => {
-        var zipFolder = readConfig.get('diff').pwd;
+        var diffZipFolder = readConfig.get('fullZips').pwd;
 
         if (argv.d || argv.diff || argv.s || argv.send) {
-            var targetPath = path.resolve(zipFolder, appName),
-                n = Process.fork(path.resolve(__dirname, './diffFile.js'));
-
+            var targetPath = path.join(diffZipFolder, appName);
             if (!exists(targetPath)) {
                 shell.mkdir('-p', targetPath)
             }
+            var n = Process.fork(path.resolve(__dirname, './diffFile.js'));
+
             n.on('message', function(message) {
                 if (message.type === 'done') {
                     n.kill();
@@ -226,7 +226,7 @@ function minWeex(platform) {
     versionInfo['appName'] = appName;
     versionInfo['jsVersion'] = jsVersion;
     versionInfo['timestamp'] = timestamp;
-    versionInfo['jsPath'] = readConfig.get('diff')['proxy'];
+    versionInfo['jsPath'] = readConfig.get('fullZips')['proxy'];
 
     jsonfile.writeFile(md5File, _.assign({
         filesMd5: versionMap
@@ -278,8 +278,8 @@ function weexErosHandler({ jsVersion, platform }) {
 function _encrypt(data) {
     let _crypt = require('cryptlib'),
         tmp = JSON.stringify(data),
-        iv = 'RjatRGC4W72PJXTE',
-        key = _crypt.getHashSha256('eros loves you', 32)
+        iv = 'RjatTUN4W72PJXTE',
+        key = _crypt.getHashSha256('btr', 32)
 
     return _crypt.encrypt(tmp, key, iv)
 }

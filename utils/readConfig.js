@@ -30,7 +30,8 @@ function readAllConfig() {
             localZipFolder: erosConfig.zipFolder,
             version: erosConfig.version,
             framework: '// { "framework": "Vue" }\n',
-            erosNativeJs: erosConfig
+            erosNativeJs: erosConfig,
+            fullZips: erosConfig.fullZips,
         }, erosDev)
         return;
     }
